@@ -4,32 +4,44 @@ namespace Canducci\OpenCnpj;
 
 use Canducci\OpenCnpj\Models\Company;
 use Canducci\OpenCnpj\Utils\ApiResponse;
+use Canducci\OpenCnpj\Utils\Valid;
+use Canducci\OpenCnpj\ICnpjService;
 use Exception;
 
-class WebRequest 
+class CnpjService implements ICnpjService
 {
+
     public function __construct() { }
 
-    public function getCnpj(string $cnpj): ?ApiResponse
+    public static function create(): CnpjService
     {
-        try {
-            $ch = $this->getCh($cnpj);
-            if ($ch) {
-                $response = $this->getExec($ch);                
-                if ($response['error']) {
-                    return $this->getApiResponseError($response);
-                }                
-                $data = $this->getData($response['value']);
-                if ($data['valid'] === false) {
-                    return $this->getApiResponseError($data);
+        return new CnpjService();
+    }
+
+    public function getCnpj(string $cnpj): ApiResponse
+    {
+        $value = $this->normalizeCnpj($cnpj);
+        if (Valid::isCnpj($value)){
+            try {            
+                $ch = $this->getCh($value);
+                if ($ch) {
+                    $response = $this->getExec($ch);                
+                    if ($response['error']) {
+                        return $this->getApiResponseError($response);
+                    }                
+                    $data = $this->getData($response['value']);
+                    if ($data['valid'] === false) {
+                        return $this->getApiResponseError($data);
+                    }
+                    return $this->getApiResponseOk($data['value']);                
                 }
-                return $this->getApiResponseOk($data['value']);                
+                return $this->getApiResponseExceptionError(new Exception("CurHandle invalid"));
+            } 
+            catch(Exception $ex) {
+                return $this->getApiResponseExceptionError($ex);
             }
-            return $this->getApiResponseExceptionError(new Exception("CurHandle invalid"));
-        } 
-        catch(Exception $ex) {
-            return $this->getApiResponseExceptionError($ex);
         }
+        return $this->getApiResponseExceptionError(new Exception("Invalid CNPJ format"));
     }
 
     private function getCh(string $cnpj): \CurlHandle|false
@@ -86,7 +98,7 @@ class WebRequest
 
     private function getApiResponseExceptionError(Exception $ex): ApiResponse
     {      
-        return ApiResponse::error($ex);       
+        return ApiResponse::error($ex);
     }
 
     private function getApiResponseOk(array $data): ApiResponse
@@ -94,8 +106,8 @@ class WebRequest
         return ApiResponse::ok(new Company($data));
     }
 
-    public static function create(): WebRequest
+    private function normalizeCnpj(string $cnpj): string
     {
-        return new WebRequest();
-    }
+        return preg_replace('/\D/', '', $cnpj);
+    }    
 }
