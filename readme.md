@@ -5,6 +5,8 @@
 
 Uma biblioteca PHP simples e eficiente para consultar informações de empresas brasileiras através do CNPJ utilizando a API do OpenCNPJ.
 
+Referente ao Projeto [https://opencnpj.org/](https://opencnpj.org/)
+
 ## Características
 
 - ✅ Consulta dados completos de empresas pelo CNPJ
