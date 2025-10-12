@@ -4,33 +4,33 @@ namespace Canducci\OpenCnpj\Models;
 
 class Company
 {
-    public string $cnpj;
-    public string $legalName;
-    public string $tradeName;
-    public string $status;
-    public string $statusDate;
-    public string $headOffice;
-    public string $startDate;
-    public string $mainCnae;
-    public array $secondaryCnaes = [];
-    public int $secondaryCnaesCount;
-    public string $legalNature;
-    public string $address;
-    public string $number;
-    public string $complement;
-    public string $neighborhood;
-    public string $zip;
-    public string $state;
-    public string $city;
-    public string $email;
-    public array $phones = [];
-    public string $capital;
-    public string $companySize;
-    public ?string $simplesOption;
-    public ?string $simplesDate;
-    public ?string $meiOption;
-    public ?string $meiDate;
-    public array $shareholders = [];
+    private string $cnpj;
+    private string $legalName;
+    private string $tradeName;
+    private string $status;
+    private string $statusDate;
+    private string $headOffice;
+    private string $startDate;
+    private string $mainCnae;
+    private array $secondaryCnaes = [];
+    private int $secondaryCnaesCount;
+    private string $legalNature;
+    private string $address;
+    private string $number;
+    private string $complement;
+    private string $neighborhood;
+    private string $zip;
+    private string $state;
+    private string $city;
+    private string $email;
+    private array $phones = [];
+    private string $capital;
+    private string $companySize;
+    private ?string $simplesOption;
+    private ?string $simplesDate;
+    private ?string $meiOption;
+    private ?string $meiDate;
+    private array $shareholders = [];
 
     public function __construct(array $data)
     {
@@ -62,4 +62,32 @@ class Company
         $this->meiDate = $data['data_opcao_mei'] ?? null;
         $this->shareholders = array_map(fn($s) => new Shareholder($s), $data['QSA'] ?? []);
     }
+
+    public function getCnpj(): string { return $this->cnpj; }
+    public function getLegalName(): string { return $this->legalName; }
+    public function getTradeName(): string { return $this->tradeName; }
+    public function getStatus(): string { return $this->status; }
+    public function getStatusDate(): string { return $this->statusDate; }
+    public function getHeadOffice(): string { return $this->headOffice; }
+    public function getStartDate(): string { return $this->startDate; }
+    public function getMainCnae(): string { return $this->mainCnae; }
+    public function getSecondaryCnaes(): array { return $this->secondaryCnaes; }
+    public function getSecondaryCnaesCount(): int { return $this->secondaryCnaesCount; }
+    public function getLegalNature(): string { return $this->legalNature; }
+    public function getAddress(): string { return $this->address; }
+    public function getNumber(): string { return $this->number; }
+    public function getComplement(): string { return $this->complement; }
+    public function getNeighborhood(): string { return $this->neighborhood; }
+    public function getZip(): string { return $this->zip; }
+    public function getState(): string { return $this->state; }
+    public function getCity(): string { return $this->city; }
+    public function getEmail(): string { return $this->email; }
+    public function getPhones(): array { return $this->phones; }
+    public function getCapital(): string { return $this->capital; }
+    public function getCompanySize(): string { return $this->companySize; }
+    public function getSimplesOption(): ?string { return $this->simplesOption; }
+    public function getSimplesDate(): ?string { return $this->simplesDate; }
+    public function getMeiOption(): ?string { return $this->meiOption; }
+    public function getMeiDate(): ?string { return $this->meiDate; }
+    public function getShareholders(): array { return $this->shareholders; }
 }

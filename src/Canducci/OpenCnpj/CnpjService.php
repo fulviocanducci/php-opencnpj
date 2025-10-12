@@ -44,19 +44,19 @@ class CnpjService implements ICnpjService
         return $this->getApiResponseExceptionError(new Exception("Invalid CNPJ format"));
     }
 
-    private function getCh(string $cnpj): \CurlHandle|false
+    protected function getCh(string $cnpj): \CurlHandle|false
     {
         $ch = curl_init("https://api.opencnpj.org/{$cnpj}");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [            
             'Accept: application/json'
         ]);
         return $ch;
     }
 
-    private function getData(string $json): array 
+    protected function getData(string $json): array 
     {
         if (empty($json)) {
             return [
@@ -78,7 +78,7 @@ class CnpjService implements ICnpjService
 
     }
 
-    private function getExec(\CurlHandle $ch): array 
+    protected function getExec(\CurlHandle $ch): array 
     {       
         $value = curl_exec($ch);
         $error = curl_errno($ch);
@@ -91,22 +91,22 @@ class CnpjService implements ICnpjService
         ];
     }
 
-    private function getApiResponseError(array $response): ApiResponse
+    protected function getApiResponseError(array $response): ApiResponse
     {
         return ApiResponse::error(new Exception($response['errorMsg'], $response['error']));        
     }
 
-    private function getApiResponseExceptionError(Exception $ex): ApiResponse
+    protected function getApiResponseExceptionError(Exception $ex): ApiResponse
     {      
         return ApiResponse::error($ex);
     }
 
-    private function getApiResponseOk(array $data): ApiResponse
+    protected function getApiResponseOk(array $data): ApiResponse
     {
         return ApiResponse::ok(new Company($data));
     }
 
-    private function normalizeCnpj(string $cnpj): string
+    protected function normalizeCnpj(string $cnpj): string
     {
         return preg_replace('/\D/', '', $cnpj);
     }    

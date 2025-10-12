@@ -1,15 +1,15 @@
-<?php 
+<?php
 
 namespace Canducci\OpenCnpj\Models;
 
 class Shareholder
 {
-    public string $name;
-    public string $cpfOrCnpj;
-    public string $qualification;
-    public string $entryDate;
-    public string $type;
-    public string $ageRange;
+    private string $name;
+    private string $cpfOrCnpj;
+    private string $qualification;
+    private string $entryDate;
+    private string $type;
+    private string $ageRange;
 
     public function __construct(array $data)
     {
@@ -19,5 +19,35 @@ class Shareholder
         $this->entryDate = $data['data_entrada_sociedade'] ?? '';
         $this->type = $data['identificador_socio'] ?? '';
         $this->ageRange = $data['faixa_etaria'] ?? '';
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getCpfOrCnpj(): string
+    {
+        return $this->cpfOrCnpj;
+    }
+
+    public function getQualification(): string
+    {
+        return $this->qualification;
+    }
+
+    public function getEntryDate(): string
+    {
+        return $this->entryDate;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getAgeRange(): string
+    {
+        return $this->ageRange;
     }
 }

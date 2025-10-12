@@ -2,7 +2,8 @@
 
 namespace Canducci\OpenCnpj\Utils;
 
-final class Valid {
+final class Valid 
+{
     public static function isCnpj(string $cnpj): bool
     {
         $cnpj = preg_replace('/\D/', '', $cnpj);
@@ -12,21 +13,21 @@ final class Valid {
         if (preg_match('/^(.)\1*$/', $cnpj)) {
             return false;
         }
-        $lengths = [5,6];
-        for ($t = 12; $t < 14; $t++) {
-            $sum = 0;
-            $pos = 0;
-            for ($i = 0; $i < $t; $i++) {
-                $sum += $cnpj[$i] * $lengths[$pos % 2];
-                $pos++;
-            }
-            $digit = ($sum % 11 < 2) ? 0 : 11 - ($sum % 11);
-            if ($cnpj[$t] != $digit) {
-                return false;
-            }
-            array_unshift($lengths, $lengths[0] + 1);
-            array_pop($lengths);
+        $digits = substr($cnpj, 0, 12);
+        $weights1 = [5,4,3,2,9,8,7,6,5,4,3,2];
+        $weights2 = [6,5,4,3,2,9,8,7,6,5,4,3,2];
+        $sum = 0;
+        for ($i = 0; $i < 12; $i++) {
+            $sum += (int)$digits[$i] * $weights1[$i];
         }
-        return true;
+        $digit1 = ($sum % 11 < 2) ? 0 : 11 - ($sum % 11);
+        $digits .= $digit1;
+        $sum = 0;
+        for ($i = 0; $i < 13; $i++) {
+            $sum += (int)$digits[$i] * $weights2[$i];
+        }
+        $digit2 = ($sum % 11 < 2) ? 0 : 11 - ($sum % 11);
+
+        return $cnpj[12] == $digit1 && $cnpj[13] == $digit2;
     }
 }
