@@ -1,0 +1,19 @@
+{
+  "name": "fulviocanducci/opencnpj",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Canducci\\OpenCnpj\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "fulviocanducci",
+      "email": "fulviocanducci@hotmail.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^12.4"
+  }
+}
