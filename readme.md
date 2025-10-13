@@ -1,7 +1,6 @@
 # PHP OpenCNPJ
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.1-blue.svg)](https://php.net)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.1-blue.svg)](https://php.net) [![CI & Release](https://github.com/fulviocanducci/php-opencnpj/actions/workflows/ci.yml/badge.svg)](https://github.com/fulviocanducci/php-opencnpj/actions/workflows/ci.yml)
 
 Uma biblioteca PHP simples e eficiente para consultar informações de empresas brasileiras através do CNPJ utilizando a API do OpenCNPJ.
 
