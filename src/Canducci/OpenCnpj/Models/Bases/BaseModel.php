@@ -1,6 +1,6 @@
 <?php
 
-namespace Canducci\OpenCnpj\Models;
+namespace Canducci\OpenCnpj\Models\Bases;
 
 use JsonSerializable;
 

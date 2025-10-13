@@ -2,11 +2,13 @@
 
 namespace Canducci\OpenCnpj\Models;
 
+use Canducci\OpenCnpj\Models\Bases\BaseModel;
+
 class Phone extends BaseModel
 {
-    private string $ddd;
-    private string $number;
-    private bool $isFax;
+    protected string $ddd;
+    protected string $number;
+    protected bool $isFax;
 
     public function __construct(array $data)
     {

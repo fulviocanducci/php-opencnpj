@@ -2,16 +2,16 @@
 
 namespace Canducci\OpenCnpj\Models;
 
-use JsonSerializable;
+use Canducci\OpenCnpj\Models\Bases\BaseModel;
 
 class Shareholder extends BaseModel
 {
-    private string $name;
-    private string $cpfOrCnpj;
-    private string $qualification;
-    private string $entryDate;
-    private string $type;
-    private string $ageRange;
+    protected string $name;
+    protected string $cpfOrCnpj;
+    protected string $qualification;
+    protected string $entryDate;
+    protected string $type;
+    protected string $ageRange;
 
     public function __construct(array $data)
     {

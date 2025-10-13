@@ -2,35 +2,37 @@
 
 namespace Canducci\OpenCnpj\Models;
 
+use Canducci\OpenCnpj\Models\Bases\BaseModel;
+
 class Company extends BaseModel
 {
-    private string $cnpj;
-    private string $legalName;
-    private string $tradeName;
-    private string $status;
-    private string $statusDate;
-    private string $headOffice;
-    private string $startDate;
-    private string $mainCnae;
-    private array $secondaryCnaes = [];
-    private int $secondaryCnaesCount;
-    private string $legalNature;
-    private string $address;
-    private string $number;
-    private string $complement;
-    private string $neighborhood;
-    private string $zip;
-    private string $state;
-    private string $city;
-    private string $email;
-    private array $phones = [];
-    private string $capital;
-    private string $companySize;
-    private ?string $simplesOption;
-    private ?string $simplesDate;
-    private ?string $meiOption;
-    private ?string $meiDate;
-    private array $shareholders = [];
+    protected string $cnpj;
+    protected string $legalName;
+    protected string $tradeName;
+    protected string $status;
+    protected string $statusDate;
+    protected string $headOffice;
+    protected string $startDate;
+    protected string $mainCnae;
+    protected array $secondaryCnaes = [];
+    protected int $secondaryCnaesCount;
+    protected string $legalNature;
+    protected string $address;
+    protected string $number;
+    protected string $complement;
+    protected string $neighborhood;
+    protected string $zip;
+    protected string $state;
+    protected string $city;
+    protected string $email;
+    protected array $phones = [];
+    protected string $capital;
+    protected string $companySize;
+    protected ?string $simplesOption;
+    protected ?string $simplesDate;
+    protected ?string $meiOption;
+    protected ?string $meiDate;
+    protected array $shareholders = [];
 
     public function __construct(array $data)
     {
@@ -98,5 +100,5 @@ class Company extends BaseModel
             return $this->$name;
         }
         return null;
-    }    
+    }
 }
