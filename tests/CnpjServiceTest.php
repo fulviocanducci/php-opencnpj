@@ -68,7 +68,7 @@ final class CnpjServiceTest extends TestCase
             'data_opcao_mei' => null,
             'QSA' => [
                 [
-                    'nome_socio' => 'Fulvio C.',
+                    'nome_socio' => 'Alguém C.',
                     'cnpj_cpf_socio' => '12345678901',
                     'qualificacao_socio' => 'Administrador',
                     'data_entrada_sociedade' => '01/01/2000',
@@ -88,7 +88,7 @@ final class CnpjServiceTest extends TestCase
             'errorMsg' => ''
         ]);
 
-        $response = $mock->getCnpj('11222333000181');
+        $response = $mock->get('11222333000181');
         $this->assertInstanceOf(ApiResponse::class, $response);
         $this->assertTrue($response->isValid());
 
@@ -101,13 +101,13 @@ final class CnpjServiceTest extends TestCase
         $this->assertEquals('11', $company->getPhones()[0]->getDdd());
         $this->assertCount(1, $company->getShareholders());
         $this->assertInstanceOf(Shareholder::class, $company->getShareholders()[0]);
-        $this->assertEquals('Fulvio C.', $company->getShareholders()[0]->getName());
+        $this->assertEquals('Alguém C.', $company->getShareholders()[0]->getName());
     }
 
     public function testGetCnpjWithInvalidCnpj(): void
     {
         $cnpj = '123';
-        $response = $this->service->getCnpj($cnpj);
+        $response = $this->service->get($cnpj);
         $this->assertInstanceOf(ApiResponse::class, $response);
         $this->assertFalse($response->isValid());
         $this->assertNotNull($response->getException());
@@ -125,7 +125,7 @@ final class CnpjServiceTest extends TestCase
             'errorMsg' => ''
         ]);
 
-        $response = $mock->getCnpj('11222333000181');
+        $response = $mock->get('11222333000181');
         $this->assertFalse($response->isValid());
         $this->assertStringContainsString('Empty response', $response->getException()->getMessage());
     }
@@ -141,7 +141,7 @@ final class CnpjServiceTest extends TestCase
             'errorMsg' => ''
         ]);
 
-        $response = $mock->getCnpj('11222333000181');
+        $response = $mock->get('11222333000181');
         $this->assertFalse($response->isValid());
         $this->assertStringContainsString('Invalid JSON response', $response->getException()->getMessage());
     }
@@ -157,7 +157,7 @@ final class CnpjServiceTest extends TestCase
             'errorMsg' => 'Timeout'
         ]);
 
-        $response = $mock->getCnpj('11222333000181');
+        $response = $mock->get('11222333000181');
         $this->assertFalse($response->isValid());
         $this->assertStringContainsString('Timeout', $response->getException()->getMessage());
     }

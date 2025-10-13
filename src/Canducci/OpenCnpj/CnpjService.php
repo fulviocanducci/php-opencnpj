@@ -18,7 +18,7 @@ class CnpjService implements ICnpjService
         return new CnpjService();
     }
 
-    public function getCnpj(string $cnpj): ApiResponse
+    public function get(string $cnpj): ApiResponse
     {
         $value = $this->normalizeCnpj($cnpj);
         if (Valid::isCnpj($value)){

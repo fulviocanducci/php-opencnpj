@@ -6,5 +6,5 @@ use Canducci\OpenCnpj\Utils\ApiResponse;
 
 interface ICnpjService 
 {
-    public function getCnpj(string $cnpj): ApiResponse;
+    public function get(string $cnpj): ApiResponse;
 }
