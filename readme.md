@@ -16,6 +16,7 @@ Referente ao Projeto [https://opencnpj.org/](https://opencnpj.org/)
 - ✅ Interface bem definida com `ICnpjService`
 - ✅ Compatível com PHP 8.1+
 - ✅ PSR-4 autoloading
+- ✅ Suporte ao Laravel
 
 ## Instalação
 
@@ -23,6 +24,45 @@ Instale via Composer:
 
 ```bash
 composer require fulviocanducci/opencnpj
+```
+
+## Integração com Laravel
+
+Para integrar com Laravel, registre o service provider no arquivo `config/app.php`:
+
+```php
+'providers' => [
+    // ...
+    Canducci\OpenCnpj\Providers\OpenCnpjServiceProvider::class,
+],
+```
+
+Ou utilize o auto-discovery do Composer (recomendado para Laravel 5.5+).
+
+Após a instalação, você pode injetar o `CnpjService` em seus controllers:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Canducci\OpenCnpj\CnpjService;
+use Illuminate\Http\Request;
+
+class CompanyController extends Controller
+{
+    public function show(Request $request, CnpjService $cnpjService)
+    {
+        $cnpj = $request->input('cnpj');
+        $response = $cnpjService->get($cnpj);
+
+        if ($response->isValid()) {
+            return response()->json($response->getCompany());
+        }
+
+        return response()->json(['error' => $response->getException()->getMessage()], 400);
+    }
+}
 ```
 
 ## Uso Básico
@@ -38,9 +78,9 @@ use Canducci\OpenCnpj\CnpjService;
 $cnpjService = CnpjService::create();
 
 // Consultar CNPJ (com ou sem formatação)
-$response = $cnpjService->getCnpj('11.222.333/0001-81');
+$response = $cnpjService->get('11.222.333/0001-81');
 // ou
-$response = $cnpjService->getCnpj('11222333000181');
+$response = $cnpjService->get('11222333000181');
 
 // Verificar se a consulta foi bem-sucedida
 if ($response->isValid()) {
@@ -48,7 +88,7 @@ if ($response->isValid()) {
     
     echo "Razão Social: " . $company->getLegalName() . "\n";
     echo "Nome Fantasia: " . $company->getTradeName() . "\n";
-    echo "CNPJ: " . $company->getCnpj() . "\n";
+    echo "CNPJ: " . $company->get() . "\n";
     echo "Status: " . $company->getStatus() . "\n";
     echo "Endereço: " . $company->getAddress() . ", " . $company->getNumber() . "\n";
     echo "Cidade: " . $company->getCity() . " - " . $company->getState() . "\n";
@@ -78,55 +118,136 @@ if ($response->isValid()) {
 
 ### Company (Empresa)
 
-A classe `Company` contém todas as informações da empresa com métodos getters para acesso aos dados:
+A classe `Company` contém todas as informações da empresa com métodos getters e acesso mágico via `__get` para acesso aos dados:
 
 ```php
-$company->getCnpj()                    // CNPJ da empresa
-$company->getLegalName()               // Razão social
-$company->getTradeName()               // Nome fantasia
-$company->getStatus()                  // Situação cadastral
-$company->getStatusDate()              // Data da situação cadastral
-$company->getHeadOffice()              // Matriz/Filial
-$company->getStartDate()               // Data de início da atividade
-$company->getMainCnae()                // CNAE principal
-$company->getSecondaryCnaes()          // Array de CNAEs secundários
-$company->getSecondaryCnaesCount()     // Quantidade de CNAEs secundários
-$company->getLegalNature()             // Natureza jurídica
-$company->getAddress()                 // Logradouro
-$company->getNumber()                  // Número
-$company->getComplement()              // Complemento
-$company->getNeighborhood()            // Bairro
-$company->getZip()                     // CEP
-$company->getState()                   // UF
-$company->getCity()                    // Município
-$company->getEmail()                   // E-mail
-$company->getPhones()                  // Array de telefones (Phone[])
-$company->getCapital()                 // Capital social
-$company->getCompanySize()             // Porte da empresa
-$company->getSimplesOption()           // Opção pelo Simples
-$company->getSimplesDate()             // Data da opção pelo Simples
-$company->getMeiOption()               // Opção pelo MEI
-$company->getMeiDate()                 // Data da opção pelo MEI
-$company->getShareholders()            // Array de sócios (Shareholder[])
+$company->getCnpj() ou $company->cnpj                    // CNPJ da empresa
+$company->getLegalName() ou $company->legalName         // Razão social
+$company->getTradeName() ou $company->tradeName         // Nome fantasia
+$company->getStatus() ou $company->status               // Situação cadastral
+$company->getStatusDate() ou $company->statusDate       // Data da situação cadastral
+$company->getHeadOffice() ou $company->headOffice       // Matriz/Filial
+$company->getStartDate() ou $company->startDate         // Data de início da atividade
+$company->getMainCnae() ou $company->mainCnae           // CNAE principal
+$company->getSecondaryCnaes() ou $company->secondaryCnaes // Array de CNAEs secundários
+$company->getSecondaryCnaesCount() ou $company->secondaryCnaesCount // Quantidade de CNAEs secundários
+$company->getLegalNature() ou $company->legalNature     // Natureza jurídica
+$company->getAddress() ou $company->address             // Logradouro
+$company->getNumber() ou $company->number               // Número
+$company->getComplement() ou $company->complement       // Complemento
+$company->getNeighborhood() ou $company->neighborhood   // Bairro
+$company->getZip() ou $company->zip                     // CEP
+$company->getState() ou $company->state                 // UF
+$company->getCity() ou $company->city                   // Município
+$company->getEmail() ou $company->email                 // E-mail
+$company->getPhones() ou $company->phones               // Array de telefones (Phone[])
+$company->getCapital() ou $company->capital             // Capital social
+$company->getCompanySize() ou $company->companySize     // Porte da empresa
+$company->getSimplesOption() ou $company->simplesOption // Opção pelo Simples
+$company->getSimplesDate() ou $company->simplesDate     // Data da opção pelo Simples
+$company->getMeiOption() ou $company->meiOption         // Opção pelo MEI
+$company->getMeiDate() ou $company->meiDate             // Data da opção pelo MEI
+$company->getShareholders() ou $company->shareholders   // Array de sócios (Shareholder[])
 ```
 
 ### Phone (Telefone)
 
 ```php
-$phone->getDdd()        // Código DDD
-$phone->getNumber()     // Número do telefone
-$phone->isFax()         // Se é fax (boolean)
+$phone->getDdd() ou $phone->ddd        // Código DDD
+$phone->getNumber() ou $phone->number  // Número do telefone
+$phone->isFax() ou $phone->fax         // Se é fax (boolean)
 ```
 
 ### Shareholder (Sócio)
 
 ```php
-$shareholder->getName()           // Nome do sócio
-$shareholder->getCpfOrCnpj()      // CPF ou CNPJ do sócio
-$shareholder->getQualification()  // Qualificação do sócio
-$shareholder->getEntryDate()      // Data de entrada na sociedade
-$shareholder->getType()           // Identificador do sócio
-$shareholder->getAgeRange()       // Faixa etária
+$shareholder->getName() ou $shareholder->name                 // Nome do sócio
+$shareholder->getCpfOrCnpj() ou $shareholder->cpfOrCnpj       // CPF ou CNPJ do sócio
+$shareholder->getQualification() ou $shareholder->qualification // Qualificação do sócio
+$shareholder->getEntryDate() ou $shareholder->entryDate       // Data de entrada na sociedade
+$shareholder->getType() ou $shareholder->type                 // Identificador do sócio
+$shareholder->getAgeRange() ou $shareholder->ageRange         // Faixa etária
+```
+
+## Serialização JSON
+
+As classes `Company`, `Phone` e `Shareholder` implementam serialização JSON, permitindo converter os objetos em arrays ou JSON facilmente:
+
+```php
+$company = $response->getCompany();
+
+// Converter para array
+$companyArray = $company->toArray();
+
+// Converter para JSON
+$companyJson = json_encode($company, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+echo $companyJson;
+```
+
+### Exemplo de JSON Gerado
+
+```json
+{
+  "cnpj": "11.222.333/0001-81",
+  "legalName": "EMPRESA EXEMPLO LTDA",
+  "tradeName": "EXEMPLO EMPRESA",
+  "status": "ATIVA",
+  "statusDate": "2020-01-15",
+  "headOffice": "MATRIZ",
+  "startDate": "2015-03-10",
+  "mainCnae": "62.01-1-00",
+  "secondaryCnaes": [
+    "62.02-3-00",
+    "62.03-1-00"
+  ],
+  "secondaryCnaesCount": 2,
+  "legalNature": "206-2",
+  "address": "RUA EXEMPLO",
+  "number": "123",
+  "complement": "SALA 456",
+  "neighborhood": "CENTRO",
+  "zip": "01234-567",
+  "state": "SP",
+  "city": "SÃO PAULO",
+  "email": "contato@exemplo.com",
+  "phones": [
+    {
+      "ddd": "11",
+      "number": "99999-8888",
+      "fax": false
+    },
+    {
+      "ddd": "11",
+      "number": "3333-4444",
+      "fax": true
+    }
+  ],
+  "capital": "100000.00",
+  "companySize": "MICRO EMPRESA",
+  "simplesOption": "SIM",
+  "simplesDate": "2015-03-10",
+  "meiOption": "NÃO",
+  "meiDate": null,
+  "shareholders": [
+    {
+      "name": "JOÃO DA SILVA",
+      "cpfOrCnpj": "123.456.789-00",
+      "qualification": "49-Sócio-Administrador",
+      "entryDate": "2015-03-10",
+      "type": "PESSOA FÍSICA",
+      "ageRange": "Entre 31 a 40 anos"
+    },
+    {
+      "name": "MARIA SOUSA",
+      "cpfOrCnpj": "987.654.321-00",
+      "qualification": "49-Sócio-Administrador",
+      "entryDate": "2018-05-20",
+      "type": "PESSOA FÍSICA",
+      "ageRange": "Entre 41 a 50 anos"
+    }
+  ]
+}
 ```
 
 ## Validação de CNPJ
@@ -145,7 +266,7 @@ if (Valid::isCnpj('11.222.333/0001-81')) {
 
 // A validação é feita automaticamente no CnpjService
 $cnpjService = CnpjService::create();
-$response = $cnpjService->getCnpj('11222333000181'); // Valida automaticamente
+$response = $cnpjService->get('11222333000181'); // Valida automaticamente
 ```
 
 ## Tratamento de Erros
@@ -153,7 +274,7 @@ $response = $cnpjService->getCnpj('11222333000181'); // Valida automaticamente
 A biblioteca utiliza a classe `ApiResponse` para encapsular tanto sucessos quanto erros:
 
 ```php
-$response = $cnpjService->getCnpj('11222333000181');
+$response = $cnpjService->get('11222333000181');
 
 if ($response->isValid()) {
     // Sucesso - dados disponíveis
@@ -187,7 +308,7 @@ use Canducci\OpenCnpj\CnpjService;
 function consultarCNPJ(string $cnpj): void
 {
     $cnpjService = CnpjService::create();
-    $response = $cnpjService->getCnpj($cnpj);
+    $response = $cnpjService->get($cnpj);
     
     if (!$response->isValid()) {
         echo "❌ Erro ao consultar CNPJ: " . $response->getException()->getMessage() . "\n";
@@ -282,14 +403,19 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 ## Changelog
 
-### v2.0.0
-- **BREAKING CHANGES**: Encapsulamento de propriedades com métodos getters
+### v0.0.3
+- Implementação de serialização JSON nas classes Company, Phone e Shareholder
+- Adicionado método mágico `__get` para acesso direto às propriedades privadas
+- Suporte a conversão para array com `toArray()`
+
+### v0.0.2
+- Adicionado suporte ao Laravel com service provider e auto-discovery
+
+### v0.0.1
 - Substituição de `WebRequest` por `CnpjService` com interface `ICnpjService`
 - Adicionada validação automática de CNPJ com classe `Valid`
 - Melhorias na arquitetura e organização do código
 - Atualização para PHP 8.1+
-
-### v1.0.0
 - Versão inicial
 - Consulta de CNPJ via API OpenCNPJ
 - Modelos estruturados para Company, Phone e Shareholder

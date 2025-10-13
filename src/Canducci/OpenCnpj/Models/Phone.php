@@ -2,7 +2,7 @@
 
 namespace Canducci\OpenCnpj\Models;
 
-class Phone
+class Phone extends BaseModel
 {
     private string $ddd;
     private string $number;
@@ -15,18 +15,18 @@ class Phone
         $this->isFax = $data['is_fax'] ?? false;
     }
 
-    public function getDdd(): string
-    {
-        return $this->ddd;
-    }
+    public function getDdd(): string { return $this->ddd; }
 
-    public function getNumber(): string
-    {
-        return $this->number;
-    }
+    public function getNumber(): string { return $this->number; }
 
-    public function isFax(): bool
+    public function isFax(): bool { return $this->isFax; }
+
+    public function __get($name) 
     {
-        return $this->isFax;
+        if (property_exists($this, $name)) 
+        {
+            return $this->$name;
+        }
+        return null;
     }
 }

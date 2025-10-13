@@ -2,7 +2,9 @@
 
 namespace Canducci\OpenCnpj\Models;
 
-class Shareholder
+use JsonSerializable;
+
+class Shareholder extends BaseModel
 {
     private string $name;
     private string $cpfOrCnpj;
@@ -21,33 +23,24 @@ class Shareholder
         $this->ageRange = $data['faixa_etaria'] ?? '';
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    public function getName(): string { return $this->name; }
 
-    public function getCpfOrCnpj(): string
-    {
-        return $this->cpfOrCnpj;
-    }
+    public function getCpfOrCnpj(): string { return $this->cpfOrCnpj; }
 
-    public function getQualification(): string
-    {
-        return $this->qualification;
-    }
+    public function getQualification(): string { return $this->qualification; }
 
-    public function getEntryDate(): string
-    {
-        return $this->entryDate;
-    }
+    public function getEntryDate(): string { return $this->entryDate; }
 
-    public function getType(): string
-    {
-        return $this->type;
-    }
+    public function getType(): string { return $this->type; }
 
-    public function getAgeRange(): string
+    public function getAgeRange(): string { return $this->ageRange; }
+
+    public function __get($name) 
     {
-        return $this->ageRange;
+        if (property_exists($this, $name)) 
+        {
+            return $this->$name;
+        }
+        return null;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Canducci\OpenCnpj\Models;
 
-class Company
+class Company extends BaseModel
 {
     private string $cnpj;
     private string $legalName;
@@ -90,4 +90,13 @@ class Company
     public function getMeiOption(): ?string { return $this->meiOption; }
     public function getMeiDate(): ?string { return $this->meiDate; }
     public function getShareholders(): array { return $this->shareholders; }
+
+    public function __get($name) 
+    {
+        if (property_exists($this, $name)) 
+        {
+            return $this->$name;
+        }
+        return null;
+    }    
 }
