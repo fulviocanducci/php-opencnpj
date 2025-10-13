@@ -1,15 +1,9 @@
 name: CI & Release
 
 on:
-  workflow_dispatch:
-  push:
-    branches: 
-      - main
-  pull_request:
-    branches:
-      - main
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -32,8 +26,7 @@ jobs:
         run: composer test
 
   release:
-    needs: test
-    if: github.event_name == 'release'
+    needs: test    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
