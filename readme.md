@@ -8,15 +8,16 @@ Referente ao Projeto [https://opencnpj.org/](https://opencnpj.org/)
 
 ## Características
 
-- ✅ Consulta dados completos de empresas pelo CNPJ
-- ✅ Validação automática de CNPJ antes da consulta
-- ✅ Informações detalhadas incluindo sócios, telefones e endereço
-- ✅ Tratamento robusto de erros
-- ✅ Modelos estruturados com encapsulamento adequado
-- ✅ Interface bem definida com `ICnpjService`
-- ✅ Compatível com PHP 8.1+
-- ✅ PSR-4 autoloading
-- ✅ Suporte ao Laravel
+- ✅ Consulta dados completos de empresas pelo CNPJ.
+- ✅ Validação automática de CNPJ antes da consulta.
+- ✅ Informações detalhadas incluindo sócios, telefones e endereço.
+- ✅ Tratamento robusto de erros.
+- ✅ Modelos estruturados com encapsulamento adequado.
+- ✅ Interface bem definida com `ICnpjService`.
+- ✅ Compatível com PHP 8.1+.
+- ✅ PSR-4 autoloading.
+- ✅ Suporte ao Laravel.
+- ✅ Facade com `CnpjService` - (Versão v1.0.1 ou superior).
 
 ## Instalação
 
@@ -28,13 +29,26 @@ composer require fulviocanducci/opencnpj
 
 ## Integração com Laravel
 
-Para integrar com Laravel, registre o service provider no arquivo `config/app.php`:
+Para integrar com Laravel, registre o service provider no arquivo `config/app.php`
 
 ```php
 'providers' => [
     // ...
     Canducci\OpenCnpj\Providers\OpenCnpjServiceProvider::class,
 ],
+```
+
+ou na versões mais recentes `bootstrap/providers.php`
+
+
+```php
+use App\Providers\AppServiceProvider;
+use Canducci\OpenCnpj\Providers\OpenCnpjServiceProvider;
+
+return [
+    AppServiceProvider::class,
+    OpenCnpjServiceProvider::class,
+];
 ```
 
 Ou utilize o auto-discovery do Composer (recomendado para Laravel 5.5+).
@@ -64,6 +78,31 @@ class CompanyController extends Controller
     }
 }
 ```
+
+Facade (versão v1.0.1 ou superior) você utilizar de modo simplificado, sem precisar injetar o serviço no controller:
+
+```php
+namespace App\Http\Controllers;
+
+use Canducci\OpenCnpj\Facade\CnpjService; //Facade
+use Illuminate\Http\Request;
+
+class CompanyController extends Controller
+{
+    public function show(Request $request)
+    {
+        $cnpj = $request->input('cnpj');
+        $response = CnpjService::get($cnpj); // Chamada via Facade
+
+        if ($response->isValid()) {
+            return response()->json($response->getCompany());
+        }
+
+        return response()->json(['error' => $response->getException()->getMessage()], 400);
+    }
+}
+```
+
 
 ## Uso Básico
 
@@ -246,13 +285,13 @@ function consultarCNPJ(string $cnpj): void
     $response = $cnpjService->get($cnpj);
 
     if (!$response->isValid()) {
-        echo "❌ Erro ao consultar CNPJ: " . $response->getException()->getMessage() . "\n";
+        echo "Erro ao consultar CNPJ: " . $response->getException()->getMessage() . "\n";
         return;
     }
 
     $company = $response->getCompany();
 
-    echo "🏢 INFORMAÇÕES DA EMPRESA\n";
+    echo "INFORMAÇÕES DA EMPRESA\n";
     echo "========================\n";
     echo "CNPJ: {$company->getCnpj()}\n";
     echo "Razão Social: {$company->getLegalName()}\n";
@@ -261,7 +300,7 @@ function consultarCNPJ(string $cnpj): void
     echo "Porte: {$company->getCompanySize()}\n";
     echo "Capital Social: {$company->getCapital()}\n";
 
-    echo "\n📍 ENDEREÇO\n";
+    echo "\n ENDEREÇO\n";
     echo "===========\n";
     echo "{$company->getAddress()}, {$company->getNumber()}\n";
     if (!empty($company->getComplement())) {
@@ -272,7 +311,7 @@ function consultarCNPJ(string $cnpj): void
     echo "CEP: {$company->getZip()}\n";
 
     if (!empty($company->getPhones())) {
-        echo "\n📞 TELEFONES\n";
+        echo "\n TELEFONES\n";
         echo "============\n";
         foreach ($company->getPhones() as $phone) {
             $type = $phone->isFax() ? "Fax" : "Telefone";
@@ -343,6 +382,14 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 - Implementação do Facade para Laravel.
 - Mudança na classe da Validação para Cnpj Alpha/Numeric.
+
+### v1.0.0
+
+- Versão estável com suporte completo ao Laravel.
+
+### v0.0.4
+
+- Versão Beta para Facade do Laravel
 
 ### v0.0.3
 
