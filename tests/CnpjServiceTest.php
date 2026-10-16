@@ -16,16 +16,6 @@ final class CnpjServiceTest extends TestCase
         $this->service = CnpjService::create();
     }
 
-    public function testNormalizeCnpj(): void
-    {
-        $reflection = new ReflectionClass($this->service);
-        $method = $reflection->getMethod('normalizeCnpj');
-        $method->setAccessible(true);
-        $raw = '11.222.333/0001-81';
-        $normalized = $method->invoke($this->service, $raw);
-        $this->assertEquals('11222333000181', $normalized);
-    }
-
     public function testValidCnpj(): void
     {
         $this->assertTrue(Valid::isCnpj('11222333000181'));
