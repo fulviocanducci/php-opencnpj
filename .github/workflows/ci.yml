@@ -15,9 +15,12 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: "8.4"
           extensions: mbstring, bcmath
           coverage: xdebug
+
+      - name: Check PHP version
+        run: php -v
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -26,7 +29,7 @@ jobs:
         run: composer test
 
   release:
-    needs: test    
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -35,7 +38,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: "8.4"
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
