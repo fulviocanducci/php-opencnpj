@@ -5,7 +5,7 @@ namespace Canducci\OpenCnpj\Facade;
 use Illuminate\Support\Facades\Facade;
 use Canducci\OpenCnpj\ICnpjService;
 
-class Cnpj extends Facade
+class CnpjService extends Facade
 {
     protected static function getFacadeAccessor()
     {

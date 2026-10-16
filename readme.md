@@ -85,7 +85,7 @@ $response = $cnpjService->get('11222333000181');
 // Verificar se a consulta foi bem-sucedida
 if ($response->isValid()) {
     $company = $response->getCompany();
-    
+
     echo "Razão Social: " . $company->getLegalName() . "\n";
     echo "Nome Fantasia: " . $company->getTradeName() . "\n";
     echo "CNPJ: " . $company->get() . "\n";
@@ -93,21 +93,21 @@ if ($response->isValid()) {
     echo "Endereço: " . $company->getAddress() . ", " . $company->getNumber() . "\n";
     echo "Cidade: " . $company->getCity() . " - " . $company->getState() . "\n";
     echo "CEP: " . $company->getZip() . "\n";
-    
+
     // Listar telefones
     foreach ($company->getPhones() as $phone) {
         echo "Telefone: (" . $phone->getDdd() . ") " . $phone->getNumber();
         echo $phone->isFax() ? " (Fax)" : "";
         echo "\n";
     }
-    
+
     // Listar sócios
     foreach ($company->getShareholders() as $shareholder) {
         echo "Sócio: " . $shareholder->getName() . "\n";
         echo "CPF/CNPJ: " . $shareholder->getCpfOrCnpj() . "\n";
         echo "Qualificação: " . $shareholder->getQualification() . "\n";
     }
-    
+
 } else {
     $exception = $response->getException();
     echo "Erro: " . $exception->getMessage() . "\n";
@@ -244,14 +244,14 @@ function consultarCNPJ(string $cnpj): void
 {
     $cnpjService = CnpjService::create();
     $response = $cnpjService->get($cnpj);
-    
+
     if (!$response->isValid()) {
         echo "❌ Erro ao consultar CNPJ: " . $response->getException()->getMessage() . "\n";
         return;
     }
-    
+
     $company = $response->getCompany();
-    
+
     echo "🏢 INFORMAÇÕES DA EMPRESA\n";
     echo "========================\n";
     echo "CNPJ: {$company->getCnpj()}\n";
@@ -260,7 +260,7 @@ function consultarCNPJ(string $cnpj): void
     echo "Status: {$company->getStatus()}\n";
     echo "Porte: {$company->getCompanySize()}\n";
     echo "Capital Social: {$company->getCapital()}\n";
-    
+
     echo "\n📍 ENDEREÇO\n";
     echo "===========\n";
     echo "{$company->getAddress()}, {$company->getNumber()}\n";
@@ -270,7 +270,7 @@ function consultarCNPJ(string $cnpj): void
     echo "{$company->getNeighborhood()}\n";
     echo "{$company->getCity()} - {$company->getState()}\n";
     echo "CEP: {$company->getZip()}\n";
-    
+
     if (!empty($company->getPhones())) {
         echo "\n📞 TELEFONES\n";
         echo "============\n";
@@ -279,7 +279,7 @@ function consultarCNPJ(string $cnpj): void
             echo "{$type}: ({$phone->getDdd()}) {$phone->getNumber()}\n";
         }
     }
-    
+
     if (!empty($company->getShareholders())) {
         echo "\n👥 SÓCIOS\n";
         echo "=========\n";
@@ -333,20 +333,29 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 ## Autor
 
 **Fulvio Cezar Canducci Dias**
+
 - Email: fulviocanducci@hotmail.com
 - GitHub: [@fulviocanducci](https://github.com/fulviocanducci)
 
 ## Changelog
 
+### v1.0.1
+
+- Implementação do Facade para Laravel.
+- Mudança na classe da Validação para Cnpj Alpha/Numeric.
+
 ### v0.0.3
+
 - Implementação de serialização JSON nas classes Company, Phone e Shareholder
 - Adicionado método mágico `__get` para acesso direto às propriedades privadas
 - Suporte a conversão para array com `toArray()`
 
 ### v0.0.2
+
 - Adicionado suporte ao Laravel com service provider e auto-discovery
 
 ### v0.0.1
+
 - Substituição de `WebRequest` por `CnpjService` com interface `ICnpjService`
 - Adicionada validação automática de CNPJ com classe `Valid`
 - Melhorias na arquitetura e organização do código
